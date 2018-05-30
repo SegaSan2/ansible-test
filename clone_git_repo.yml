@@ -1,0 +1,13 @@
+---
+- hosts: mongo
+  gather_facts: no
+
+  tasks:
+#  - name: Get Facts
+#    debug:
+#      msg: "{{ ansible_os_family }}"
+
+  - name: Read config file mongo
+    command: cat /etc/mongod.conf
+    become: yes
+    register: file_conf_mongodb
