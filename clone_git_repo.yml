@@ -3,11 +3,24 @@
   gather_facts: no
 
   tasks:
-#  - name: Get Facts
-#    debug:
-#      msg: "{{ ansible_os_family }}"
-
-  - name: Read config file mongo
-    command: cat /etc/mongod.conf
+  - name: Upgrade and install required programs
+    yum:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - htop
+      - git-all
+      - python-devel
     become: yes
-    register: file_conf_mongodb
+
+  - name: Clone repository
+    git:
+      repo: git@github.com:SegaSan2/ansible-test.git
+      dest: ~/1
+      version: {{ git_branch }}
+      user: git
+      key_file: "{{ ssh_key }}"
+      accept_hostkey: yes
+      force: yes
+      recursive: no
+
