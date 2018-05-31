@@ -6,28 +6,39 @@
   become: yes
   when: ansible_distribution == 'CentOS'
 
+- name: Plug MongoDB repository
+  template:
+    src: ../templates/mongodb-org_ams.repo.j2
+    dest: /etc/yum.repos.d/mongodb-org.repo
+  become: yes
+  when: ansible_distribution == 'Amazon'
+
 - name: Upgrade and install required programs
   yum:
     name: "{{ item }}"
     state: latest
+    enablerepo: "epel"
   with_items:
     - htop
     - git-all
     - python-devel
-    - fish
+#    - fish
     - rsync
     - acl
     - xorg-x11-server-Xvfb
     - mongodb-org-shell
     - libXrender
     - wget
-    - nodejs
-    - npm
     - nfs-utils
     - supervisor
     - htop
     - iptraf-ng
-
   become: yes
+# Нужно устанавливать отдельно в CentOS нет, а в Amazon есть
+#    - python2-pip
+
+# Устанавливается отдельно
+#    - nodejs
+#    - npm
 #    - xz-utils - предустановлен??
 #    - nodejs-legacy не нашел для Centos

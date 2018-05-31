@@ -1,11 +1,14 @@
 ---
-- hosts: virt_local
+- hosts: locans
+#virt_local
 #  gather_facts: no
 
   roles:
-    - common/install
-    - common/sshkey
-    - common/Gitclone
+#    - common/install
+#    - common/sshkey
+#    - common/Gitclone
+#    - common/npm
+    - common/nodejs
 
 
 

@@ -1,0 +1,19 @@
+---
+- name: Install gcc
+  yum:
+    name: "{{ item }}"
+    state: latest
+    enablerepo: "epel"
+  with_items:
+    - gcc-c++
+    - make
+  become: yes
+
+- name: Run script
+  shell: curl -sL https://rpm.nodesource.com/setup_8.x | sudo -E bash - warn=False
+  become: yes
+
+- name: Install NodeJS
+  yum:
+    name: nodejs
+    state: latest

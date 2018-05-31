@@ -1,0 +1,11 @@
+- name: Install npm packages
+  npm:
+    global: yes
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - bower
+  - uglifycss
+  - uglify-js
+  - less
+  become: yes
