@@ -1,4 +1,8 @@
 localhost ansible_connection=local
 
-[virt-local]
-mongo
+[virt_local]
+#mongo
+locans
+
+[amason]
+ansible

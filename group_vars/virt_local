@@ -1,3 +1,6 @@
 # Какую ветку забирать
 git_branch: test01
-ssh_key:
+ssh_key: ~/.ssh/gitlab
+
+# MongoDB version
+mongo_ver: 3.4

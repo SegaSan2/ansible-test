@@ -1,26 +1,11 @@
 ---
-- hosts: mongo
-  gather_facts: no
+- hosts: virt_local
+#  gather_facts: no
 
-  tasks:
-  - name: Upgrade and install required programs
-    yum:
-      name: "{{ item }}"
-      state: latest
-    with_items:
-      - htop
-      - git-all
-      - python-devel
-    become: yes
+  roles:
+    - common/install
+    - common/sshkey
+    - common/Gitclone
 
-  - name: Clone repository
-    git:
-      repo: git@github.com:SegaSan2/ansible-test.git
-      dest: ~/1
-      version: {{ git_branch }}
-      user: git
-      key_file: "{{ ssh_key }}"
-      accept_hostkey: yes
-      force: yes
-      recursive: no
+
 

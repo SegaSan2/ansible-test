@@ -1,0 +1,16 @@
+---
+#Copy ssh key-file
+- name: Creates .ssh directory for root
+  file:
+    path: ~/.ssh
+    state: directory
+  become: yes
+
+# This public key is set on Github repo Settings under "Deploy keys"
+- name: Upload the private key used for Github cloning
+  copy:
+    src: ../templates/gitlab
+    dest: "{{ ssh_key }}"
+    mode: 0600
+  become: yes
+

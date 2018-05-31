@@ -1,0 +1,12 @@
+---
+  - name: Clone repository
+    git:
+      repo: git@github.com:SegaSan2/ansible-test.git
+      dest: ~/1
+      version: "{{ git_branch }}"
+#      user: git
+#      key_file: "{{ ssh_key }}"
+      accept_hostkey: yes
+#      force: yes
+#      recursive: no
+#    become: yes

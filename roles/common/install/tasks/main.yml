@@ -1,0 +1,33 @@
+---
+- name: Plug MongoDB repository
+  template:
+    src: ../templates/mongodb-org.repo.j2
+    dest: /etc/yum.repos.d/mongodb-org.repo
+  become: yes
+  when: ansible_distribution == 'CentOS'
+
+- name: Upgrade and install required programs
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - htop
+    - git-all
+    - python-devel
+    - fish
+    - rsync
+    - acl
+    - xorg-x11-server-Xvfb
+    - mongodb-org-shell
+    - libXrender
+    - wget
+    - nodejs
+    - npm
+    - nfs-utils
+    - supervisor
+    - htop
+    - iptraf-ng
+
+  become: yes
+#    - xz-utils - предустановлен??
+#    - nodejs-legacy не нашел для Centos
