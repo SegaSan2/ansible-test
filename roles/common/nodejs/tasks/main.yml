@@ -17,3 +17,4 @@
   yum:
     name: nodejs
     state: latest
+  become: yes

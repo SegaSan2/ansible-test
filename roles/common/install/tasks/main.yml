@@ -22,7 +22,6 @@
     - htop
     - git-all
     - python-devel
-#    - fish
     - rsync
     - acl
     - xorg-x11-server-Xvfb
@@ -33,12 +32,17 @@
     - supervisor
     - htop
     - iptraf-ng
+    - python{{ py_ver }}
+    - python{{ py_ver }}-pip
   become: yes
-# Нужно устанавливать отдельно в CentOS нет, а в Amazon есть
-#    - python2-pip
 
-# Устанавливается отдельно
-#    - nodejs
-#    - npm
-#    - xz-utils - предустановлен??
-#    - nodejs-legacy не нашел для Centos
+- name: Install pip ans fish for CentOS
+  yum:
+    name: "{{ item }}"
+    state: latest
+    enablerepo: "epel"
+  with_items:
+    - python2-pip
+    - fish
+  become: yes
+  when: ansible_distribution == 'CentOS'

@@ -1,0 +1,111 @@
+---
+# Install and tune php-fpm
+- name: Install php extensions for Centos
+  yum:
+    state: latest
+    name: "{{ item }}"
+  with_items:
+    - php71w
+    - php71w-common
+    - php71w-mysqlnd
+    - php71w-gd
+    - php71w-pecl-igbinary
+    - php71w-pecl-memcached
+    - php71w-cli
+    - php71w-fpm
+    - php71w-json
+    - php71w-mbstring
+    - php71w-opcache
+    - php71w-xml
+  become: yes
+  when: ansible_distribution == 'CentOS'
+
+- name: Install php extensions for Amazon
+  yum:
+    state: latest
+    name: "{{ item }}"
+    enablerepo: "epel"
+  with_items:
+    - php71
+    - php71-common
+    - php71-mysqlnd
+    - php71-gd
+    - php71-pecl-igbinary
+    - php71-pecl-memcached
+    - php71-cli
+    - php71-fpm
+    - php71-json
+    - php71-mbstring
+    - php71-opcache
+    - php71-xml
+  become: yes
+  when: ansible_distribution == 'Amazon'
+#    - php-pecl-msgpack
+#    - php-pear
+# что не нашел
+#php71-dev
+#php71-phpdbg
+
+- name: Setup php-fpm for Centos
+#  replace: dest=/etc/php-7.1.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+  replace: dest=/etc/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+  notify:
+    - restart nginx
+  become: yes
+  when: ansible_distribution == 'CentOS'
+
+- name: Setup php-fpm for Amazon
+  replace: dest=/etc/php-7.1.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+  notify:
+    - restart nginx
+  become: yes
+  when: ansible_distribution == 'Amazon'
+
+- name: Copy php-fpm config file Centos
+  template:
+    src: ../templates/centos_php-fpm.conf.j2
+    dest: /etc/php-fpm.d/www.conf
+    owner: root
+    group: root
+    mode: 644
+    backup: yes
+  become: yes
+  when: ansible_distribution == 'CentOS'
+
+- name: Copy php-fpm config file Amazon
+  template:
+    src: ../templates/amazon_php-fpm.conf.j2
+    dest: /etc/php-fpm-7.1.d/www.conf
+    owner: root
+    group: root
+    mode: 644
+    backup: yes
+  become: yes
+  when: ansible_distribution == 'Amazon'
+
+- name: Start php-fpm for Centos
+  service:
+#    name: php-fpm-7.1
+    name: php-fpm
+    state: started
+    enabled: yes
+  become: yes
+  when: ansible_distribution == 'CentOS'
+
+
+- name: Start php-fpm for Amazon
+  service:
+    name: php-fpm-7.1
+    state: started
+    enabled: yes
+  become: yes
+  when: ansible_distribution == 'Amazon'
+
+- name: Add php settings
+  template: src=../../nginx/templates/nginx-wp-common.conf dest=/etc/nginx/nginx-wp-common.conf owner=nginx group=nginx mode=0664
+  notify:
+    - restart nginx
+  become: yes
+
+
+

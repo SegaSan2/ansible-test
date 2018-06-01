@@ -4,3 +4,8 @@ ssh_key: ~/.ssh/gitlab
 
 # MongoDB version
 mongo_ver: 3.4
+
+# Python version
+# В CentOS доступна более высокая версия при подключении доп. репозитория,
+# в Amazon доступна до 3.6
+py_ver: 34
