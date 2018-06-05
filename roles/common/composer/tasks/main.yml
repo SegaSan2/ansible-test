@@ -22,7 +22,7 @@
 
 - name: Move Composer into globally-accessible location.
   shell: >
-    mv /tmp/composer.phar {{ composer_path }}
+    mv ~/composer.phar {{ composer_path }}
     creates={{ composer_path }}
   when: not composer_bin.stat.exists
 

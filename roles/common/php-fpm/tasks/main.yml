@@ -1,24 +1,57 @@
 ---
-# Install and tune php-fpm
-- name: Install php extensions for Centos
-  yum:
-    state: latest
-    name: "{{ item }}"
-  with_items:
-    - php71w
-    - php71w-common
-    - php71w-mysqlnd
-    - php71w-gd
-    - php71w-pecl-igbinary
-    - php71w-pecl-memcached
-    - php71w-cli
-    - php71w-fpm
-    - php71w-json
-    - php71w-mbstring
-    - php71w-opcache
-    - php71w-xml
-  become: yes
-  when: ansible_distribution == 'CentOS'
+# Install php-packages use
+
+
+## Install and tune php-fpm (Old ver.)
+#- name: Install php extensions for Centos
+#  yum:
+#    state: latest
+#    name: "{{ item }}"
+#  with_items:
+#    - php71w
+#    - php71w-common
+#    - php71w-mysqlnd
+#    - php71w-gd
+#    - php71w-pecl-igbinary
+#    - php71w-pecl-memcached
+#    - php71w-cli
+#    - php71w-fpm
+#    - php71w-json
+#    - php71w-mbstring
+#    - php71w-opcache
+#    - php71w-xml
+#    - php71w-pecl-mongodb
+#  become: yes
+#  when: ansible_distribution == 'CentOS'
+
+## Install and tune php-fpm use centos-release-scl
+# https://lists.centos.org/pipermail/centos-announce/2017-November/022636.html
+
+#- name: Install php extensions for Centos
+#  yum:
+#    state: latest
+#    name: "{{ item }}"
+#  with_items:
+#    - rh-php71
+#    - rh-php71-php-common
+#    - rh-php71-php-mysqlnd
+#    - rh-php71-php-gd
+#    - sclo-php71-php-pecl-igbinary
+#    - sclo-php71-php-pecl-memcached
+#    - rh-php71-php-cli
+#    - rh-php71-php-fpm
+#    - rh-php71-php-mbstring
+#    - rh-php71-php-json
+#    - rh-php71-php-opcache
+#    - rh-php71-php-dbg
+#    - rh-php71-php-xml
+#    - rh-php71-php-devel
+#    - sclo-php71-php-pecl-mongodb
+#    - sclo-php71-php-pecl-amqp
+#    - sclo-php71-php-pecl-memcached
+#  become: yes
+#  when: ansible_distribution == 'CentOS'
+
 
 - name: Install php extensions for Amazon
   yum:
@@ -38,6 +71,7 @@
     - php71-mbstring
     - php71-opcache
     - php71-xml
+    - php71-pecl-mongodb
   become: yes
   when: ansible_distribution == 'Amazon'
 #    - php-pecl-msgpack
@@ -48,7 +82,8 @@
 
 - name: Setup php-fpm for Centos
 #  replace: dest=/etc/php-7.1.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
-  replace: dest=/etc/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+#  replace: dest=/etc/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+  replace: dest=/etc/opt/rh/rh-php71/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
   notify:
     - restart nginx
   become: yes
@@ -64,7 +99,8 @@
 - name: Copy php-fpm config file Centos
   template:
     src: ../templates/centos_php-fpm.conf.j2
-    dest: /etc/php-fpm.d/www.conf
+#    dest: /etc/php-fpm.d/www.conf
+    dest: /etc/opt/rh/rh-php71/php-fpm.d/www.conf
     owner: root
     group: root
     mode: 644

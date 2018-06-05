@@ -13,6 +13,16 @@
   become: yes
   when: ansible_distribution == 'Amazon'
 
+- name: Install Centos repo
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - epel-release
+#    - centos-release-scl
+  become: yes
+  when: ansible_distribution == 'CentOS'
+
 - name: Upgrade and install required programs
   yum:
     name: "{{ item }}"
@@ -34,6 +44,7 @@
     - iptraf-ng
     - python{{ py_ver }}
     - python{{ py_ver }}-pip
+    - yum-utils
   become: yes
 
 - name: Install pip ans fish for CentOS

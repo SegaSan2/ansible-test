@@ -1,16 +1,23 @@
 ---
-- hosts: locans
-# ansible
+- hosts: homeans
+#ansible
 #virt_local
 #  gather_facts: no
 
   roles:
 #    - common/install
 #    - common/sshkey
-#    - common/php-fpm
+#    - common/nginx
+##    - common/php-fpm
 #    - common/nodejs
 #    - common/npm
-    - common/composer
-#    - common/Gitclone
+#    - common/composer
+#    - common/memcached
+    - common/mongodb
+    - common/rabbitmq
+    - common/redis
+    - common/Gitclone
+#    - common/project_setup
+
 
 

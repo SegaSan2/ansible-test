@@ -16,6 +16,7 @@
 - name: Install Memcached.
   package: name=memcached state=installed
   register: memcached_install
+  become: yes
 
 # Configure Memcached.
 - name: Copy Memcached configuration.
@@ -26,6 +27,8 @@
     group: root
     mode: 0644
   notify: restart memcached
+  become: yes
 
 - name: Ensure Memcached is started and set to run on startup.
   service: name=memcached state=started enabled=yes
+  become: yes

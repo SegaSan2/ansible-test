@@ -1,6 +1,7 @@
 # Какую ветку забирать
-git_branch: test01
+git_branch: master
 ssh_key: ~/.ssh/gitlab
+
 
 # MongoDB version
 mongo_ver: 3.4
@@ -9,3 +10,13 @@ mongo_ver: 3.4
 # В CentOS доступна более высокая версия при подключении доп. репозитория,
 # в Amazon доступна до 3.6
 py_ver: 34
+
+nginx:
+  start: false
+  service_enabled: no
+  run_as: nginx
+auto_up_disable: true
+
+server_hostname: maxibooking.mb.dev
+
+core_update_level: true

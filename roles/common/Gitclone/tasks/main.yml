@@ -1,12 +1,13 @@
 ---
   - name: Clone repository
     git:
-      repo: git@github.com:SegaSan2/ansible-test.git
-      dest: ~/1
+      repo: git@bitbucket.org:MaxiBookingTeam/maxibooking-hotel.git
+#      git@github.com:SegaSan2/ansible-test.git
+      dest: /var/www/{{ git_branch }}
       version: "{{ git_branch }}"
 #      user: git
-#      key_file: "{{ ssh_key }}"
+      key_file: "{{ ssh_key }}"
       accept_hostkey: yes
-#      force: yes
+      force: yes
 #      recursive: no
 #    become: yes
