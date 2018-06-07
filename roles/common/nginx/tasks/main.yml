@@ -1,12 +1,5 @@
 ---
-# Install Nginx on Amazon server
-
-# Upgrade before install
-#- name: Upgrade all packages
-#  yum:
-#    name: '*'
-#    state: latest
-#  become: yes
+# Install Nginx on server
 
 - name: Install nginx
   yum:
@@ -15,7 +8,6 @@
   with_items:
     - nginx
     - git
-    - htop
   become: yes
 
 - name: Start and enable nginx
@@ -68,18 +60,18 @@
 - name: Update nginx conf for PHP
   template:
     src: ../templates/default-site.conf.j2
-    dest: /etc/nginx/sites-avaible/{{ git_branch }}.conf
+    dest: /etc/nginx/sites-avaible/{{ server_hostname }}.conf
     owner: root
     group: root
-    mode: 0644
+    mode: 0664
   become: yes
   notify:
     - restart nginx
 
 - name: Enable site
   file:
-    src: /etc/nginx/sites-avaible/{{ git_branch }}.conf
-    dest: /etc/nginx/sites-enabled/{{ git_branch }}.conf
+    src: /etc/nginx/sites-avaible/{{ server_hostname }}.conf
+    dest: /etc/nginx/sites-enabled/{{ server_hostname }}.conf
     owner: root
     group: root
     state: link

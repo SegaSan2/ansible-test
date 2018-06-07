@@ -28,10 +28,17 @@
   rpm_key:
     key: https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
 
-- name: download rabbitmq package
+- name: download rabbitmq package Centos
   get_url:
     url: "https://www.rabbitmq.com/releases/rabbitmq-server/v{{ rabbitmq_version.split('-')[0] }}/rabbitmq-server-{{ rabbitmq_version }}{% if rabbitmq_version is version_compare('3.6.6', '>=') %}.el{{ ansible_distribution_major_version }}{% endif %}.noarch.rpm"
     dest: "/usr/src/rabbitmq-server-{{ rabbitmq_version }}.rpm"
+  when: ansible_distribution == 'CentOS'
+
+- name: download rabbitmq package Amazon
+  get_url:
+    url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.5.8/rabbitmq-server-3.5.8-1.noarch.rpm"
+    dest: "/usr/src/rabbitmq-server-{{ rabbitmq_version }}.rpm"
+  when: ansible_distribution == 'Amazon'
 
 - name: install rabbitmq
   yum:

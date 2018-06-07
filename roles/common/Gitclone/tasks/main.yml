@@ -1,16 +1,16 @@
 ---
-#  - name: Clone repository
-#    git:
-#      repo: git@bitbucket.org:MaxiBookingTeam/maxibooking-hotel.git
-##      git@github.com:SegaSan2/ansible-test.git
-#      dest: /var/www/{{ git_branch }}
-#      version: "{{ git_branch }}"
-##      user: git
-#      key_file: "{{ ssh_key }}"
-#      accept_hostkey: yes
-#      force: yes
-##      recursive: no
-#    become: yes
+  - name: Clone repository
+    git:
+      repo: git@bitbucket.org:MaxiBookingTeam/maxibooking-hotel.git
+#      git@github.com:SegaSan2/ansible-test.git
+      dest: /var/www/{{ server_hostname }}
+      version: "{{ git_branch }}"
+#      user: git
+      key_file: "{{ ssh_key }}"
+      accept_hostkey: yes
+      force: yes
+#      recursive: no
+    become: yes
 
 
   - name: Adding user "{{ ansible_user_id }}" in nginx group
@@ -31,14 +31,21 @@
 
   - name: Set permission to deploy folder
     file:
-      path: /var/www/{{ git_branch }}
+      path: /var/www/{{ server_hostname }}
       state: directory
       owner: nginx
       group: nginx
-      mode: 0775
+#      mode: 0775
       recurse: yes
     become: yes
 
+  - name: Ensure directories are 0775
+    command: find /var/www/{{ server_hostname }}/ -type d -exec chmod 0777 {} \;
+    become: yes
+
+  - name: Ensure files are 0664
+    command: find /var/www/{{ server_hostname }}/ -type f -exec chmod 0664 {} \;
+    become: yes
 
 #  - name: Find file for change permission
 #    find:

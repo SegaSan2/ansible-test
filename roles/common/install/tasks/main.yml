@@ -62,3 +62,17 @@
     - fish
   become: yes
   when: ansible_distribution == 'CentOS'
+
+- name: Install php-lib on Amazon
+  yum:
+    name: "{{ item }}"
+    state: latest
+    enablerepo: "epel"
+  with_items:
+    - libtool-ltdl
+    - libXpm
+    - httpd
+    - httpd-mmn
+    - compat-libtiff3
+  become: yes
+  when: ansible_distribution == 'Amazon'

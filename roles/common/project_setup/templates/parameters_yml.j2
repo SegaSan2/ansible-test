@@ -1,0 +1,57 @@
+# This file is auto-generated during the composer install
+parameters:
+    mailer_transport: smtp
+    mailer_host: smtp.example.com
+    mailer_user: robot@example.com
+    mailer_password: password
+    from_email: robot@example.com
+    mailer_encryption: ssl
+    mongodb_host: '%env(MONGODB_HOST)%'
+    mongodb_port: '%env(MONGODB_PORT)%'
+    mongodb_options: '%env(MONGODB_OPTIONS)%'
+    mongodb_database: '%env(MONGODB_DATABASE)%'
+    mongodb_login: '%env(MONGODB_LOGIN)%'
+    mongodb_password: '%env(MONGODB_PASSWORD)%'
+    mongodb_admin_login: '%env(MONGODB_ADMIN_LOGIN)%'
+    mongodb_admin_password: '%env(MONGODB_ADMIN_PASSWORD)%'
+    rabbitmq_user: maxibooking
+    rabbitmq_password: maxibooking
+    rabbitmq_host: 127.0.0.1
+    rabbitmq_vhost: /maxibooking
+    rabbitmq_port: '5672'
+    secret: mySyperSecretKeyForSymfony
+    mbhs_key: mySyperSecretKeyForMBHS
+    mbh_environment: prod
+    locale: ru
+    debug_toolbar: true
+    debug_redirects: false
+    use_assetic_controller: false
+    router.request_context.host: '%client%.maxi-booking.ru'
+    router.request_context.scheme: http
+    router.request_context.base_url: null
+    mbh_payment_systems_change: true
+    mbh_redis: 'redis://localhost'
+    mbh_cache:
+        is_enabled: false
+        prefix: mbh
+        lifetime: 7
+        logs: false
+        search:
+            months: 6
+            max_duration: 21
+            min_duration: 3
+    wkhtmltopdf_path: /usr/local/bin/wkhtmltopdf
+    mbh_modules:
+        tasks: true
+    client: '%env(MB_CLIENT)%'
+    mongodb_ssl: false
+    mbh_dynamic_sale_period: 90
+    s3_id: superId
+    s3_secret: superSecretKey
+    s3_region: eu-west-1
+    s3_bucket: mb-client-upload-files
+    s3_protected_bucket: mb-client-protected-upload-files
+    kernel.logs_dir: '%kernel.root_dir%/../var/clients/%client%/logs'
+    memcache_host: localhost
+    domain: maxi-booking.ru
+    billing_url: 'http://billing-dev.maxi-booking.com'

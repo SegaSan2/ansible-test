@@ -1,8 +1,8 @@
 ---
-- hosts: virt_local
+- hosts: ansible
+#virt_local
 #locans
 # homeans
-#ansible
 #  gather_facts: no
 
   roles:
@@ -17,8 +17,8 @@
 #    - common/mongodb
 #    - common/rabbitmq
 #    - common/redis
-    - common/Gitclone
-#    - common/project_setup
+#    - common/Gitclone
+    - common/project_setup
 
 
 

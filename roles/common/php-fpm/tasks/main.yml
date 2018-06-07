@@ -1,10 +1,18 @@
 ---
 # Install php-packages use remi-repo
-- name: Install remirepo from RPM
+- name: Install remirepo from RPM Centos
   yum:
     name: http://rpms.remirepo.net/enterprise/remi-release-7.rpm
     state: present
   become: yes
+  when: ansible_distribution == 'CentOS'
+
+- name: Install remirepo from RPM Amazon
+  yum:
+    name: http://rpms.remirepo.net/enterprise/remi-release-6.rpm
+    state: present
+  become: yes
+  when: ansible_distribution == 'Amazon'
 
 - name: Install php extensions for Centos
   yum:
@@ -86,38 +94,66 @@
 #  become: yes
 #  when: ansible_distribution == 'CentOS'
 
+#
+#- name: Install php extensions for Amazon old ver
+#  yum:
+#    state: latest
+#    name: "{{ item }}"
+#    enablerepo: "epel"
+#  with_items:
+#    - php71
+#    - php71-common
+#    - php71-mysqlnd
+#    - php71-gd
+#    - php71-pecl-igbinary
+#    - php71-pecl-memcached
+#    - php71-cli
+#    - php71-fpm
+#    - php71-json
+#    - php71-mbstring
+#    - php71-opcache
+#    - php71-xml
+#    - php71-pecl-mongodb
+#  become: yes
+#  when: ansible_distribution == 'Amazon'
 
-- name: Install php extensions for Amazon
-  yum:
-    state: latest
-    name: "{{ item }}"
-    enablerepo: "epel"
-  with_items:
-    - php71
-    - php71-common
-    - php71-mysqlnd
-    - php71-gd
-    - php71-pecl-igbinary
-    - php71-pecl-memcached
-    - php71-cli
-    - php71-fpm
-    - php71-json
-    - php71-mbstring
-    - php71-opcache
-    - php71-xml
-    - php71-pecl-mongodb
-  become: yes
-  when: ansible_distribution == 'Amazon'
 #    - php-pecl-msgpack
 #    - php-pear
 # что не нашел
 #php71-dev
 #php71-phpdbg
 
-- name: Setup php-fpm for Centos
-#  replace: dest=/etc/php-7.1.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
-  replace: dest=/etc/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
-#  replace: dest=/etc/opt/rh/rh-php71/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+- name: Install php extensions for Amazon
+  yum:
+    state: latest
+    name: "{{ item }}"
+    enablerepo: "epel,remi-php71,remi"
+    disablerepo: "amzn-main,amzn-updates"
+  with_items:
+    - php
+    - php-common
+    - php-mysqlnd
+    - php-gd
+    - php-pecl-igbinary
+    - php-pecl-memcached
+    - php-cli
+    - php-fpm
+    - php-json
+    - php-mbstring
+    - php-opcache
+    - php-xml
+    - php-pecl-mongodb
+    - php-bcmath
+    - php-mcrypt
+    - php-amqplib
+    - php-pecl-memcache
+    - php-pecl-apcu-bc
+  become: yes
+  when: ansible_distribution == 'Amazon'
+
+
+
+- name: Setup php-fpm
   template:
     src: ../templates/php_ini.j2
     dest: /etc/php.ini
@@ -128,16 +164,16 @@
   notify:
     - restart nginx
   become: yes
-  when: ansible_distribution == 'CentOS'
+#  when: ansible_distribution == 'CentOS'
 
-- name: Setup php-fpm for Amazon
-  replace: dest=/etc/php-7.1.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
-  notify:
-    - restart nginx
-  become: yes
-  when: ansible_distribution == 'Amazon'
+#- name: Setup php-fpm for Amazon
+#  replace: dest=/etc/php-7.1.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+#  notify:
+#    - restart nginx
+#  become: yes
+#  when: ansible_distribution == 'Amazon'
 
-- name: Copy php-fpm config file Centos
+- name: Copy php-fpm config file
   template:
     src: ../templates/centos_php-fpm.conf.j2
     dest: /etc/php-fpm.d/www.conf
@@ -147,42 +183,42 @@
     mode: 644
     backup: yes
   become: yes
-  when: ansible_distribution == 'CentOS'
+#  when: ansible_distribution == 'CentOS'
 
-- name: Copy php-fpm config file Amazon
-  template:
-    src: ../templates/amazon_php-fpm.conf.j2
-    dest: /etc/php-fpm-7.1.d/www.conf
-    owner: root
-    group: root
-    mode: 644
-    backup: yes
-  become: yes
-  when: ansible_distribution == 'Amazon'
+#- name: Copy php-fpm config file Amazon
+#  template:
+#    src: ../templates/amazon_php-fpm.conf.j2
+#    dest: /etc/php-fpm-7.1.d/www.conf
+#    owner: root
+#    group: root
+#    mode: 644
+#    backup: yes
+#  become: yes
+#  when: ansible_distribution == 'Amazon'
 
-- name: Start php-fpm for Centos
+- name: Start php-fpm for
   service:
 #    name: php-fpm-7.1
     name: php-fpm
     state: started
     enabled: yes
   become: yes
-  when: ansible_distribution == 'CentOS'
+#  when: ansible_distribution == 'CentOS'
 
 
-- name: Start php-fpm for Amazon
-  service:
-    name: php-fpm-7.1
-    state: started
-    enabled: yes
-  become: yes
-  when: ansible_distribution == 'Amazon'
+#- name: Start php-fpm for Amazon
+#  service:
+#    name: php-fpm-7.1
+#    state: started
+#    enabled: yes
+#  become: yes
+#  when: ansible_distribution == 'Amazon'
 
-- name: Add php settings
-  template: src=../../nginx/templates/nginx-wp-common.conf dest=/etc/nginx/nginx-wp-common.conf owner=nginx group=nginx mode=0664
-  notify:
-    - restart nginx
-  become: yes
+#- name: Add php settings
+#  template: src=../../nginx/templates/nginx-wp-common.conf dest=/etc/nginx/nginx-wp-common.conf owner=nginx group=nginx mode=0664
+#  notify:
+#    - restart nginx
+#  become: yes
 
 
 
