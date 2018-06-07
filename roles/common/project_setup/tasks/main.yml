@@ -63,4 +63,8 @@
   with_items:
     - 'cache:clear --no-warmup --env=prod'
 
-
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+  become: yes

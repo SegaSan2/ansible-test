@@ -46,9 +46,10 @@
   when: ansible_distribution == 'Centos'
   #mongodb_pymongo_from_pip
 
-#- name: Install PyMongo from PIP
-#  pip:
-#    name: pymongo
-#    state: latest
-#  become: yes
-#  when: mongodb_pymongo_from_pip
+- name: Install PyMongo from PIP
+  pip:
+    name: pymongo
+    state: latest
+  become: yes
+  ignore_errors: yes
+  when: mongodb_pymongo_from_pip

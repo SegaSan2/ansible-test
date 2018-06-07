@@ -1,5 +1,5 @@
 # Какую ветку забирать
-git_branch: master
+git_branch: dev
 ssh_key: ~/.ssh/gitlab
 
 
@@ -18,7 +18,7 @@ nginx:
 auto_up_disable: true
 
 # Необходимо вписать данные хоста. На этом собираются конфиги nginx-а
-server_hostname: ec2-34-245-53-8.eu-west-1.compute.amazonaws.com
+server_hostname: ec2-54-154-24-254.eu-west-1.compute.amazonaws.com
 
 core_update_level: true
 

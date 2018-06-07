@@ -17,7 +17,7 @@
 #    - common/mongodb
 #    - common/rabbitmq
 #    - common/redis
-#    - common/Gitclone
+    - common/Gitclone
     - common/project_setup
 
 
