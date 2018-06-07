@@ -16,22 +16,27 @@
 - name: set mongodb uid
   user: name=mongodb uid={{ mongodb_uid }} group=mongodb state=present
   when: mongodb_uid
+  become: yes
 
 - name: reset mongodb folder and subfolders with new uid
   file: path={{ mongodb_storage_dbpath }} owner=mongodb group=mongodb follow=yes recurse=yes state=directory
   when: mongodb_uid
+  become: yes
 
 - name: Create log dir if missing
-  file: state=directory recurse=yes dest={{ mongodb_systemlog_path|dirname }} owner={{ mongodb_user }} group={{mongodb_user}} mode=0755
+  file: state=directory recurse=yes dest={{ mongodb_systemlog_path|dirname }} owner={{ mongodb_user }} group={{mongodb_user}} mode=0775
   when: mongodb_systemlog_destination == "file"
+  become: yes
 
 - name: Check than logfile exists
   stat: path={{ mongodb_systemlog_path }}
   register: logfile_stat
+  become: yes
   when: mongodb_systemlog_destination == "file"
 
 - name: Create log if missing
   file: state=touch dest={{ mongodb_systemlog_path }} owner={{ mongodb_user }} group={{mongodb_user}} mode=0755
+  become: yes
   when: ( logfile_stat is defined
         and not logfile_stat.stat.exists
         and mongodb_systemlog_destination == "file" )
@@ -42,6 +47,7 @@
     state: directory
     owner: "{{ mongodb_user }}"
     recurse: yes
+  become: yes
 
 - name: Configure mongodb
   template:
@@ -52,18 +58,25 @@
     mode: 0644
     backup: yes
   register: config_result
+  when: mongodb_security_authorization == 'disabled'
+  become: yes
 
 - name: mongodb restart
   service: name={{ mongodb_daemon_name }} state=restarted
   when:
     - config_result is changed and mongodb_manage_service
+  become: yes
 
 - name: Ensure service is started
   service: name={{ mongodb_daemon_name }} state=started
+  when: mongodb_security_authorization == 'disabled'
+  become: yes
 
 - name: Wait when mongodb is started
   wait_for:
     host: "{{ item }}"
     port: "{{ mongodb_net_port }}"
     timeout: 120
+  become: yes
+  when: mongodb_security_authorization == 'disabled'
   with_items: "{{ mongodb_net_bindip.split(',') | map('replace', '0.0.0.0', '127.0.0.1') | list }}"

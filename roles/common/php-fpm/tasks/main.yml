@@ -1,5 +1,39 @@
 ---
-# Install php-packages use
+# Install php-packages use remi-repo
+- name: Install remirepo from RPM
+  yum:
+    name: http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    state: present
+  become: yes
+
+- name: Install php extensions for Centos
+  yum:
+    state: latest
+    name: "{{ item }}"
+    enablerepo: "remi-php71"
+  with_items:
+    - php
+    - php-common
+    - php-mysqlnd
+    - php-gd
+    - php-pecl-igbinary
+    - php-pecl-memcached
+    - php-cli
+    - php-fpm
+    - php-json
+    - php-mbstring
+    - php-opcache
+    - php-xml
+    - php-pecl-mongodb
+    - php-bcmath
+    - php-mcrypt
+    - php-amqplib
+    - php-pecl-memcache
+#    - php-pear
+#    - php-devel
+  become: yes
+  when: ansible_distribution == 'CentOS'
+
 
 
 ## Install and tune php-fpm (Old ver.)
@@ -82,8 +116,15 @@
 
 - name: Setup php-fpm for Centos
 #  replace: dest=/etc/php-7.1.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
-#  replace: dest=/etc/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
-  replace: dest=/etc/opt/rh/rh-php71/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+  replace: dest=/etc/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+#  replace: dest=/etc/opt/rh/rh-php71/php.ini regexp="(;cgi.fix_pathinfo=1)" replace="cgi.fix_pathinfo=0"
+  template:
+    src: ../templates/php_ini.j2
+    dest: /etc/php.ini
+    owner: root
+    group: root
+    mode: 644
+    backup: yes
   notify:
     - restart nginx
   become: yes
@@ -99,8 +140,8 @@
 - name: Copy php-fpm config file Centos
   template:
     src: ../templates/centos_php-fpm.conf.j2
-#    dest: /etc/php-fpm.d/www.conf
-    dest: /etc/opt/rh/rh-php71/php-fpm.d/www.conf
+    dest: /etc/php-fpm.d/www.conf
+#    dest: /etc/opt/rh/rh-php71/php-fpm.d/www.conf
     owner: root
     group: root
     mode: 644

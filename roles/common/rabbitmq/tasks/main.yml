@@ -2,3 +2,4 @@
 - include: rabbitmq.yml
   tags:
   - rabbitmq
+  become: yes

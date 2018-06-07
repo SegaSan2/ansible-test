@@ -11,6 +11,7 @@
 # Setup/install tasks.
 - include: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
+  become: yes
 
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
@@ -23,7 +24,9 @@
     src: redis.conf.j2
     dest: "{{ redis_conf_path }}"
     mode: 0644
+  become: yes
   notify: restart redis
 
 - name: Ensure Redis is running and enabled on boot.
   service: "name={{ redis_daemon }} state=started enabled=yes"
+  become: yes

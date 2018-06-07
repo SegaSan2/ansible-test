@@ -1,10 +1,9 @@
 localhost ansible_connection=local
 
 [virt_local]
-#mongo
-#locans
-homeans
-ansible_sudo_pass=Hexik45
+locans ansible_sudo_pass=Hexik45 ansible_ssh_user=ansible
 
+#mongo
+#homeans
 [amason]
 ansible

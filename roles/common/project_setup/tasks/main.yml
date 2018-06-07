@@ -2,6 +2,7 @@
   copy:
     src: '{{item.src}}'
     dest: '{{item.dest}}'
+
     remote_src: yes
   with_items:
     - { src: '/var/www/{{ git_branch }}/app/config/parameters.yml.dist', dest: '/var/www/{{ git_branch }}/app/config/parameters.yml'}
@@ -9,10 +10,9 @@
     - { src: '/var/www/{{ git_branch }}/app/config/database.env.dist' , dest: '/var/www/{{ git_branch }}/app/config/database.env'}
     - { src:  '/var/www/{{ git_branch }}/app/config/secrets.yml.dist', dest: '/var/www/{{ git_branch }}/app/config/secrets.yml' }
     - { src:  '/var/www/{{ git_branch }}/app/config/version.yml.dist', dest: '/var/www/{{ git_branch }}/app/config/version.yml' }
+#  become: yes
 
 - name: Composer install
-#  become: yes
-#  become_user: nginx
   composer:
     command: install
     working_dir: '/var/www/{{ git_branch }}'
@@ -30,8 +30,8 @@
     chdir: '/var/www/{{git_branch}}/bin'
   with_items:
     - 'assets:install --symlink'
-    - 'fos:js-routing:dump'
+    - 'fos:js-routing:dump --env=prod'
     - 'bazinga:js-translation:dump'
-    - 'assetic:dump'
+    - 'assetic:dump --env=prod'
     - 'doctrine:mongodb:fixtures:load --no-interaction'
   when: load_fixtures

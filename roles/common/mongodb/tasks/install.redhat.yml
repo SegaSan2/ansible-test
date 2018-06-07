@@ -16,6 +16,7 @@
     mode: 0644
   with_items: "{{ mongodb_version[0:3] }}"
   when: mongodb_package == 'mongodb-org'
+  become: yes
 
 - name: Install MongoDB package
   yum:
@@ -24,11 +25,13 @@
   with_items:
     - "{{ mongodb_package }}"
     - numactl
+  become: yes
 
 - name: Install PyMongo package
   yum:
     name: python-pymongo
     state: latest
+  become: yes
   when: not mongodb_pymongo_from_pip
 
 - name: Install PIP
@@ -37,10 +40,12 @@
   with_items:
     - python-devel
     - python-pip
+  become: yes
   when: mongodb_pymongo_from_pip
 
 - name: Install PyMongo from PIP
   pip:
     name: pymongo
     state: latest
+  become: yes
   when: mongodb_pymongo_from_pip

@@ -17,6 +17,14 @@ nginx:
   run_as: nginx
 auto_up_disable: true
 
+# Необходимо вписать данные хоста. На этом собираются конфиги nginx-а
 server_hostname: maxibooking.mb.dev
 
 core_update_level: true
+
+# Для сборки фикстур, если сервер собирается впервые
+load_fixtures: true
+
+# Для подключения в тестовом режиме. В случае изменения кода не будет подключения.
+billing_token: 43d11f496e3d9ea0b98f70a946822c9013f15a93
+billing_front_token: 43d11f496e3d9ea0b98f70a946822c9013f15a93

@@ -32,7 +32,7 @@ mongodb_processmanagement_fork: "{{ 'RedHat' == ansible_os_family }}"
 
 ## security Options
 # Disable or enable security. Possible values: 'disabled', 'enabled'
-mongodb_security_authorization: "disabled"
+mongodb_security_authorization: "enabled"
 
 mongodb_users:
   - {

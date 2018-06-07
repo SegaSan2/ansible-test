@@ -1,12 +1,16 @@
 ---
-- name: Plug MongoDB repository
+- name: Plug MongoDB repository CentOS
   template:
     src: ../templates/mongodb-org.repo.j2
     dest: /etc/yum.repos.d/mongodb-org.repo
+    owner: root
+    group: root
+    mode: 0664
+    backup: yes
   become: yes
   when: ansible_distribution == 'CentOS'
 
-- name: Plug MongoDB repository
+- name: Plug MongoDB repository Amazon
   template:
     src: ../templates/mongodb-org_ams.repo.j2
     dest: /etc/yum.repos.d/mongodb-org.repo
@@ -42,6 +46,7 @@
     - supervisor
     - htop
     - iptraf-ng
+    - unzip
     - python{{ py_ver }}
     - python{{ py_ver }}-pip
     - yum-utils

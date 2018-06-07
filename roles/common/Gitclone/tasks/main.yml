@@ -1,13 +1,57 @@
 ---
-  - name: Clone repository
-    git:
-      repo: git@bitbucket.org:MaxiBookingTeam/maxibooking-hotel.git
-#      git@github.com:SegaSan2/ansible-test.git
-      dest: /var/www/{{ git_branch }}
-      version: "{{ git_branch }}"
-#      user: git
-      key_file: "{{ ssh_key }}"
-      accept_hostkey: yes
-      force: yes
-#      recursive: no
+#  - name: Clone repository
+#    git:
+#      repo: git@bitbucket.org:MaxiBookingTeam/maxibooking-hotel.git
+##      git@github.com:SegaSan2/ansible-test.git
+#      dest: /var/www/{{ git_branch }}
+#      version: "{{ git_branch }}"
+##      user: git
+#      key_file: "{{ ssh_key }}"
+#      accept_hostkey: yes
+#      force: yes
+##      recursive: no
 #    become: yes
+
+
+  - name: Adding user "{{ ansible_user_id }}" in nginx group
+    user:
+      name: "{{ ansible_user_id }}"
+      groups: nginx
+      append: yes
+    become: yes
+
+  - name: Reset ansible connection after group changes. Wait, please...
+    shell: sleep 1; pkill -u {{ ansible_ssh_user }} sshd
+    async: 2
+    poll: 1
+    ignore_errors: true
+# Вот эта директива, вроде, самая новая, но она нифига не работает ((
+#    meta: reset_connection
+
+
+  - name: Set permission to deploy folder
+    file:
+      path: /var/www/{{ git_branch }}
+      state: directory
+      owner: nginx
+      group: nginx
+      mode: 0775
+      recurse: yes
+    become: yes
+
+
+#  - name: Find file for change permission
+#    find:
+#      path: /var/www/{{ git_branch }}/
+#      file_type: file
+#      recurse: yes
+#    register: find_result
+#
+#  - name: Set permission to deploy file
+#    file:
+#      path: "{{ item.path }}"
+#      mode: u=rw,g=rw,o=r
+#    become: yes
+#    with_items:
+#      "{{ find_result.files }}"
+

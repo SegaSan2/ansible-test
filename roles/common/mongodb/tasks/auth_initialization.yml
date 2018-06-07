@@ -1,6 +1,12 @@
 ---
 - name: Use different mongod.conf for auth initialization
-  template: src=mongod_init.conf.j2 dest=/etc/mongod.conf owner=root group=root mode=0644
+  template:
+    src: mongod_init.conf.j2
+    dest: /etc/mongod.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
 
 - name: Restart mongodb service
   service: name={{ mongodb_daemon_name }} state=restarted
@@ -33,7 +39,7 @@
       password: "{{ mongodb_user_admin_password }}",
       roles: "userAdminAnyDatabase"
       }
-  no_log: true
+  no_log: false
 
 - name: create administrative user siteRootAdmin
   mongodb_user:
