@@ -21,7 +21,7 @@
     become: yes
 
   - name: Reset ansible connection after group changes. Wait, please...
-    shell: sleep 1; pkill -u {{ ansible_ssh_user }} sshd
+    shell: sleep 1; pkill -u {{ ansible_user_id }} sshd
     async: 2
     poll: 1
     ignore_errors: true
