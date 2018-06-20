@@ -1,0 +1,10 @@
+---
+# Create new database, user and passwd
+- mongodb_user:
+    login_user: "{{ mongo_admin }}"
+    login_password: "{{ mongo_passwd }}"
+    database: "{{ mongo_new_base }}"
+    name: "{{ mongo_new_user }}"
+    password: "{{ mongo_new_passwd }}"
+    roles: readWrite,dbAdmin,userAdmin
+    state: present

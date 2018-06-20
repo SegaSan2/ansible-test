@@ -1,0 +1,65 @@
+server {
+
+    listen 80;
+    server_name {{ page_for_nginx }};
+
+#    if ($client = '') {
+#        set $client maxibooking;
+#    }
+
+#    if ($http_x_forwarded_proto != "https") {
+#          set $mbdomain maxi-booking.ru;
+#          rewrite ^(.*)$ https://$client.$mbdomain$REQUEST_URI permanent;
+#    }
+
+
+
+    access_log /var/log/nginx/{{ page_for_nginx }}.access.log;
+    root /var/www/{{ page_for_nginx }}/web;
+    rewrite ^/app\.php/?(.*)$ /$1 permanent;
+    try_files $uri @rewriteapp;
+
+    location @rewriteapp {
+        rewrite ^(.*)$ /app.php/$1 last;
+    }
+
+    # Deny all . files
+    location ~ /\. {
+        deny all;
+    }
+
+    location ~ ^/(app|app_dev)\.php(/|$) {
+        fastcgi_pass unix:/var/run/php-fpm/www.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        fastcgi_index app.php;
+        send_timeout 1800;
+        fastcgi_read_timeout 18000;
+        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PHP_VALUE "error_log=/var/log/php/{{ page_for_nginx }}.error.log";
+        fastcgi_param MB_CLIENT maxibooking;
+        fastcgi_buffer_size 128k;
+        fastcgi_buffers 256 16k;
+        fastcgi_busy_buffers_size 256k;
+        fastcgi_temp_file_write_size 256k;
+        include fastcgi_params;
+    }
+    # Statics
+    location /(bundles|media) {
+        access_log off;
+        expires 30d;
+        try_files $uri @rewriteapp;
+    }
+
+    location ~ ^/(media/cache/resolve/.*) {
+         rewrite ^(.*)$ /app.php/$1 last;
+    }
+
+    location ~* \.(eot|otf|svg|ttf|woff|woff2)$ {
+        add_header Access-Control-Allow-Origin *;
+    }
+
+    location ~* \.(jpg|jpeg|gif|png|ico|css|bmp|swf|js|html|txt)$ {
+         root /var/www/{{ page_for_nginx }}/web;
+    }
+
+}

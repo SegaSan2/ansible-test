@@ -1,0 +1,27 @@
+---
+# Install Nginx on server
+
+- name: Update nginx conf for PHP
+  template:
+    src: ../templates/default-site.conf.j2
+    dest: /etc/nginx/sites-avaible/{{ page_for_nginx }}.conf
+    owner: root
+    group: root
+    mode: 0664
+  become: yes
+  notify:
+    - restart nginx
+
+- name: Enable site
+  file:
+    src: /etc/nginx/sites-avaible/{{ page_for_nginx }}.conf
+    dest: /etc/nginx/sites-enabled/{{ page_for_nginx }}.conf
+    owner: root
+    group: root
+    state: link
+  become: yes
+  notify:
+    - restart nginx
+
+
+

@@ -1,0 +1,22 @@
+---
+
+- name: add rabbitmq virtual hosts
+  rabbitmq_vhost:
+    name: "{{ item.name | default(item) }}"
+    node: "{{ item.node | default('rabbit') }}"
+    state: present
+    tracing: "{{ item.tracing | default(False) }}"
+  with_items: "{{ rabbitmq_vhosts1 }}"
+  become: yes
+
+- name: add rabbitmq users
+  rabbitmq_user:
+    user: "{{ item.user }}"
+    password: "{{ item.password }}"
+    vhost: "{{ item.vhost | default('/') }}"
+    configure_priv: "{{ item.configure_priv | default('.*') }}"
+    read_priv: "{{ item.read_priv | default('.*') }}"
+    write_priv: "{{ item.write_priv | default('.*') }}"
+    tags: "{{ item.tags | default('') }}"
+  with_items: "{{ rabbitmq_users1 }}"
+  become: yes

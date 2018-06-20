@@ -1,0 +1,40 @@
+---
+- hosts: ansible
+#locans
+#virt_local
+# homeans
+#  gather_facts: no
+#  Новые переменные для текущей версии сайта
+  vars:
+#  Требуемая ветка для деплоя
+    new_git_branch: new_search
+#    Новая база данных, её пароль и пользователь
+    mongo_new_base: maxibooking2
+    mongo_new_user: maxibooking2
+    mongo_new_passwd: maxibooking2
+# Текущая база данных: её администратор и пароль
+    mongo_admin: admin
+    mongo_passwd: maxibooking
+# Новая страница, для создания nginx конфига
+# она должна ссылаться на текущую страницу через CNAME
+    page_for_nginx: new_search.maxibooking.ru
+    rabbitmq_users1:
+      user: maxibooking2
+      password: maxibooking2
+      tags: administrator
+      vhost: /maxibooking2
+
+    rabbitmq_vhosts1: /maxibooking2
+
+    load_fixtures: true
+
+
+  roles:
+    - newbranch/nginx
+    - newbranch/mongodb
+    - newbranch/rabbitmq
+    - newbranch/Gitclone
+#    - newbranch/project_setup
+
+
+
